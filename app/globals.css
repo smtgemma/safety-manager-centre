@@ -1,13 +1,112 @@
 @import "tailwindcss";
 
 :root {
-  --background: #edf6f0;
-  --foreground: #062b1b;
+  /* ── Surfaces ── */
+  --bg-page: #20442d; /* deep forest green */
+  --bg-surface: #112016; /* slightly lighter */
+  --bg-card: #162b1d; /* card surface */
+  --bg-card-h: #1c3525; /* card hover */
+  --bg-input: #1e5d33;
+
+  /* ── Text — WHITE on dark green = perfect contrast ── */
+  --text-1: #ffffff; /* headings, primary */
+  --text-2: #d1e8d5; /* body */
+  --text-3: #7aaa86; /* muted / secondary */
+  --text-4: #4d7558; /* very muted */
+
+  /* ── Brand green ── */
+  --green-bright: #4ade80; /* accent, links */
+  --green-cta: #16a34a; /* CTA button bg */
+  --green-cta-h: #15803d;
+
+  /* ── Borders ── */
+  --border: rgba(255, 255, 255, 0.07);
+  --border-h: rgba(74, 222, 128, 0.3);
+
+  /* ── Shadows ── */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-card-h:
+    0 6px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(74, 222, 128, 0.18);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: #edf6f0;
-  color: #062b1b;
+  background: var(--bg-page);
+  color: var(--text-2);
+  font-family:
+    var(--font-inter),
+    system-ui,
+    -apple-system,
+    sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* subtle top glow */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: radial-gradient(
+    ellipse 70% 300px at 50% 0%,
+    rgba(74, 222, 128, 0.06) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+::selection {
+  background: rgba(74, 222, 128, 0.25);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(74, 222, 128, 0.2);
+  border-radius: 99px;
+}
+
+/* ── Animations ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fade-up 0.35s ease-out both;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
 }

@@ -1,114 +1,184 @@
 'use client';
 
 import React from 'react';
-import { ExternalLink, Eye, ArrowUpRight, Globe } from 'lucide-react';
+import { ExternalLink, Eye, Globe, ArrowUpRight } from 'lucide-react';
 import type { HubProject } from '@/lib/projects-service';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 
-type ProjectCardProps = {
+export function ProjectCard({
+  project,
+  onPreview,
+}: {
   project: HubProject;
-  onPreview: (project: HubProject) => void;
-};
-
-export function ProjectCard({ project, onPreview }: ProjectCardProps) {
+  onPreview: (p: HubProject) => void;
+}) {
   return (
-    <Card className="flex flex-col justify-between overflow-hidden border-emerald-950/10 bg-white hover:border-emerald-600/70 hover:shadow-xl transition-all duration-200 group rounded-2xl">
-      <div>
-        {/* Project Thumbnail Image */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-emerald-950/5 border-b border-emerald-950/10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={project.image}
-            alt={project.name}
-            loading="lazy"
-            className="w-full h-full object-cover object-center group-hover:scale-103 transition-transform duration-300 ease-out"
-          />
+    <div
+      className="group flex flex-col rounded-xl overflow-hidden transition-all duration-200"
+      style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-card)',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.border = '1px solid var(--border-h)';
+        el.style.boxShadow = 'var(--shadow-card-h)';
+        el.style.transform = 'translateY(-3px)';
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLDivElement;
+        el.style.border = '1px solid var(--border)';
+        el.style.boxShadow = 'var(--shadow-card)';
+        el.style.transform = 'translateY(0)';
+      }}
+    >
+      {/* ── Thumbnail ── */}
+      <div
+        className="relative aspect-[16/9] overflow-hidden shrink-0"
+        style={{ background: '#0e1e13' }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={project.image}
+          alt={project.name}
+          loading="lazy"
+          className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+        />
 
-          {/* Subdomain Pill on Image */}
-          <div className="absolute top-3 left-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-emerald-950/90 text-emerald-300 backdrop-blur-md border border-emerald-700/60 shadow-xs">
-              <Globe className="w-3 h-3 text-emerald-400" />
-              <span>{project.subdomain}</span>
-            </span>
-          </div>
+        {/* Scrim */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(12,24,16,0.10) 40%, rgba(12,24,16,0.60) 100%)',
+          }}
+        />
 
-          {/* Category Badge on Image */}
-          <div className="absolute top-3 right-3">
-            <span className="inline-block px-2.5 py-1 rounded-md text-[11px] font-semibold bg-white/95 text-emerald-900 backdrop-blur-xs border border-emerald-200/80 shadow-xs">
-              {project.category}
-            </span>
-          </div>
+        {/* Subdomain — top left */}
+        <span
+          className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium"
+          style={{
+            background: 'rgba(12,24,16,0.80)',
+            border: '1px solid rgba(74,222,128,0.20)',
+            color: '#a7f3c0',
+            backdropFilter: 'blur(6px)',
+            fontFamily: 'monospace',
+          }}
+        >
+          <Globe className="w-2.5 h-2.5" />
+          {project.subdomain}
+        </span>
 
-          {/* Quick Preview Hover Trigger */}
-          <button
-            type="button"
-            onClick={() => onPreview(project)}
-            aria-label={`Preview ${project.name}`}
-            className="absolute inset-0 bg-emerald-950/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+        {/* Category — top right */}
+        <span
+          className="absolute top-3 right-3 px-2.5 py-1 rounded-md text-[11px] font-semibold"
+          style={{
+            background: 'rgba(22,163,74,0.85)',
+            color: '#ffffff',
+            backdropFilter: 'blur(6px)',
+          }}
+        >
+          {project.category}
+        </span>
+
+        {/* Hover overlay */}
+        <button
+          type="button"
+          onClick={() => onPreview(project)}
+          aria-label={`Preview ${project.name}`}
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center cursor-pointer"
+          style={{ background: 'rgba(12,24,16,0.45)' }}
+        >
+          <span
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white transition-transform duration-150 hover:scale-105"
+            style={{
+              background: 'var(--green-cta)',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.40)',
+              border: '1px solid rgba(74,222,128,0.30)',
+            }}
           >
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-emerald-800/90 hover:bg-emerald-700 backdrop-blur-xs shadow-md border border-emerald-600/50">
-              <Eye className="w-3.5 h-3.5" />
-              <span>Live Preview</span>
-            </span>
-          </button>
-        </div>
+            <Eye className="w-3.5 h-3.5" />
+            Live Preview
+          </span>
+        </button>
+      </div>
 
-        {/* Card Header & Subdomain Link */}
-        <CardHeader className="pt-4 pb-2 px-5">
-          <CardTitle className="text-base font-bold text-slate-900 group-hover:text-emerald-800 transition-colors line-clamp-1">
+      {/* ── Body ── */}
+      <div className="flex flex-col flex-1 p-4 gap-2.5">
+        {/* Title */}
+        <div>
+          <h3
+            className="text-[15px] font-semibold leading-snug line-clamp-1 transition-colors group-hover:text-green-400"
+            style={{ color: 'var(--text-1)' }}
+          >
             {project.name}
-          </CardTitle>
+          </h3>
           <a
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-mono font-semibold text-emerald-700 hover:text-emerald-900 transition-colors mt-0.5"
+            className="inline-flex items-center gap-0.5 mt-0.5 text-[11px] hover:text-green-400 transition-colors"
+            style={{ color: 'var(--text-4)', fontFamily: 'monospace' }}
           >
-            <span>https://{project.subdomain}</span>
-            <ArrowUpRight className="w-3 h-3" />
+            {project.subdomain}
+            <ArrowUpRight className="w-2.5 h-2.5" />
           </a>
-        </CardHeader>
+        </div>
 
         {/* Description */}
-        <CardContent className="pb-4 px-5">
-          <CardDescription className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-            {project.description}
-          </CardDescription>
-        </CardContent>
-      </div>
-
-      {/* Card Action Footer */}
-      <CardFooter className="pt-3 pb-4 px-5 border-t border-emerald-950/5 flex items-center justify-between gap-2 bg-emerald-50/20">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onPreview(project)}
-          className="text-xs font-semibold text-emerald-900 hover:text-emerald-950 hover:bg-emerald-100/60 border-emerald-200/80 gap-1.5 h-8.5 px-3"
+        <p
+          className="text-[12.5px] leading-relaxed line-clamp-2 flex-1"
+          style={{ color: 'var(--text-3)' }}
         >
-          <Eye className="w-3.5 h-3.5 text-emerald-700" />
-          <span>Live Preview</span>
-        </Button>
+          {project.description}
+        </p>
 
-        <Button
-          asChild
-          size="sm"
-          className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs h-8.5 px-3.5 gap-1.5 shadow-xs"
+        {/* Actions */}
+        <div
+          className="flex items-center justify-between gap-2 pt-3"
+          style={{ borderTop: '1px solid var(--border)' }}
         >
-          <a href={project.url} target="_blank" rel="noopener noreferrer">
-            <span>Launch App</span>
+          <button
+            type="button"
+            onClick={() => onPreview(project)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 cursor-pointer"
+            style={{
+              background: 'rgba(74,222,128,0.08)',
+              border: '1px solid rgba(74,222,128,0.15)',
+              color: 'var(--green-bright)',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(74,222,128,0.14)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(74,222,128,0.08)'; }}
+          >
+            <Eye className="w-3.5 h-3.5" />
+            Preview
+          </button>
+
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-xs font-semibold text-white transition-all duration-150"
+            style={{
+              background: 'var(--green-cta)',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.30)',
+              border: '1px solid rgba(74,222,128,0.25)',
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = 'var(--green-cta-h)';
+              el.style.boxShadow = '0 3px 12px rgba(0,0,0,0.40)';
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = 'var(--green-cta)';
+              el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.30)';
+            }}
+          >
+            Launch App
             <ExternalLink className="w-3 h-3" />
           </a>
-        </Button>
-      </CardFooter>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 }
