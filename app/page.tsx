@@ -16,7 +16,7 @@ export default async function HomePage() {
   const projects = await getHubProjects();
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ background: 'var(--bg-page)' }}>
+    <div className="min-h-screen flex flex-col relative" style={{ background: 'var(--bg-page)' }} suppressHydrationWarning>
       {/* ── Top green accent stripe ── */}
       <div
         style={{

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState } from "react";
 import { Layers } from "lucide-react";
 import type { HubProject } from "@/types/project";
 import { ProjectCard } from "./ProjectCard";
