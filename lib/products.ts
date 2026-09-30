@@ -102,13 +102,9 @@ async function fetchProductsFromGoogleSheets(): Promise<Product[]> {
     const imageIndex = headers.indexOf('image');
     const descriptionIndex = headers.indexOf('description');
 
-    // Ensure critical headers exist
-    if (idIndex === -1 || slugIndex === -1 || nameIndex === -1 || priceIndex === -1) {
-      console.error(
-        '[Google Sheets API] Error: Required column headers missing. Expected columns: id, slug, name, price. Found:',
-        headers
-      );
-      throw new Error('Invalid sheet structure: Required headers are missing.');
+    // If this sheet was repurposed for the Applications Hub (id, name, app, category, etc.)
+    if (idIndex === -1 || nameIndex === -1 || (priceIndex === -1 && slugIndex === -1)) {
+      return [];
     }
 
     const products: Product[] = [];
