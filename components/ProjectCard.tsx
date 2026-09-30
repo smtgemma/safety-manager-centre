@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ExternalLink, Globe, ArrowUpRight, ShieldCheck, Clock, Ban } from 'lucide-react';
+import { ExternalLink, Globe, ShieldCheck, Clock, Ban, Info, Sparkles } from 'lucide-react';
 import type { HubProject } from '@/types/project';
 
 export function ProjectCard({ project }: { project: HubProject }) {
   const [imgFailed, setImgFailed] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
   const hasImage = Boolean(project.image && project.image.trim() !== '' && !imgFailed);
 
   const isActive = project.status === 'Active';
@@ -14,7 +15,7 @@ export function ProjectCard({ project }: { project: HubProject }) {
 
   return (
     <div
-      className={`group flex flex-col rounded-xl overflow-hidden app-card ${
+      className={`group relative flex flex-col h-full rounded-xl overflow-hidden app-card ${
         isDisabled ? 'opacity-65 grayscale-[35%]' : ''
       }`}
     >
@@ -74,10 +75,10 @@ export function ProjectCard({ project }: { project: HubProject }) {
         <span
           className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium"
           style={{
-            background: 'rgba(12,24,16,0.80)',
+            background: 'rgba(12,24,16,0.85)',
             border: '1px solid rgba(74,222,128,0.20)',
             color: '#a7f3c0',
-            backdropFilter: 'blur(6px)',
+            backdropFilter: 'blur(8px)',
             fontFamily: 'monospace',
           }}
         >
@@ -114,12 +115,12 @@ export function ProjectCard({ project }: { project: HubProject }) {
         </span>
       </div>
 
-      {/* ── Body ── */}
-      <div className="flex flex-col flex-1 p-4 gap-2.5">
-        {/* Title */}
-        <div>
+      {/* ── Body (Flex column with h-full and consistent height distribution) ── */}
+      <div className="flex flex-col flex-1 p-5 gap-3">
+        {/* Title area */}
+        <div className="min-h-[50px] flex flex-col justify-start">
           <h3
-            className={`text-[15px] font-semibold leading-snug line-clamp-1 transition-colors ${
+            className={`text-[15px] font-bold leading-snug line-clamp-1 transition-colors ${
               isActive ? 'group-hover:text-green-400' : ''
             }`}
             style={{ color: 'var(--text-1)' }}
@@ -132,18 +133,19 @@ export function ProjectCard({ project }: { project: HubProject }) {
               project.name
             )}
           </h3>
-          <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-2 mt-1">
             <span
-              className="text-[11px]"
+              className="text-[11px] truncate max-w-[170px]"
               style={{ color: 'var(--text-4)', fontFamily: 'monospace' }}
             >
               {project.subdomain}
             </span>
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded font-medium"
+              className="text-[10px] px-1.5 py-0.5 rounded font-medium shrink-0"
               style={{
                 background: 'rgba(74, 222, 128, 0.08)',
                 color: 'var(--text-3)',
+                border: '1px solid rgba(74, 222, 128, 0.15)',
               }}
             >
               {project.category}
@@ -151,17 +153,74 @@ export function ProjectCard({ project }: { project: HubProject }) {
           </div>
         </div>
 
-        {/* Description */}
-        <p
-          className="text-[12.5px] leading-relaxed line-clamp-2 flex-1"
-          style={{ color: 'var(--text-3)' }}
-        >
-          {project.description}
-        </p>
+        {/* Description: 2-line clamp with pure class-based info icon button */}
+        <div className="relative flex items-start gap-2">
+          <p
+            className="text-[12.5px] leading-relaxed card-description-2lines flex-1"
+            style={{ color: 'var(--text-3)' }}
+          >
+            {project.description}
+          </p>
 
-        {/* Action Button */}
+          {/* Interactive Info Icon Button (class-based styling to eliminate SSR hydration mismatch) */}
+          <div
+            className="relative shrink-0 pt-0.5"
+            onMouseEnter={() => setShowOverlay(true)}
+            onMouseLeave={() => setShowOverlay(false)}
+          >
+            <button
+              type="button"
+              aria-label="View full description"
+              onClick={() => setShowOverlay((v) => !v)}
+              className={`w-5 h-5 rounded-full flex items-center justify-center cursor-pointer ${
+                showOverlay ? 'info-btn-active' : 'info-btn'
+              }`}
+            >
+              <Info className="w-3 h-3" />
+            </button>
+
+            {/* Satisfying Motion Overlay */}
+            {showOverlay && project.description && (
+              <div
+                className="absolute right-0 bottom-full mb-2 w-72 sm:w-80 p-4 rounded-xl z-50 shadow-2xl overlay-motion pointer-events-auto"
+                style={{
+                  background: 'linear-gradient(145deg, #132b1d 0%, #0d1e14 100%)',
+                  border: '1px solid rgba(74, 222, 128, 0.45)',
+                  boxShadow:
+                    '0 20px 40px -4px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(74, 222, 128, 0.25)',
+                }}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-white/10">
+                  <div className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-green-400" />
+                    <span className="text-[11px] font-bold text-white tracking-wide uppercase">
+                      Application Overview
+                    </span>
+                  </div>
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded font-mono font-medium"
+                    style={{
+                      background: 'rgba(74, 222, 128, 0.12)',
+                      color: 'var(--green-bright)',
+                    }}
+                  >
+                    {project.category}
+                  </span>
+                </div>
+
+                {/* High-contrast readable body */}
+                <p className="text-[13px] leading-relaxed text-emerald-50 font-normal whitespace-pre-line max-h-56 overflow-y-auto pr-1">
+                  {project.description}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Action Button: pinned consistently to bottom via mt-auto */}
         <div
-          className="flex items-center justify-end gap-2 pt-3"
+          className="flex items-center justify-end gap-2 pt-3 mt-auto"
           style={{ borderTop: '1px solid var(--border)' }}
         >
           {isActive ? (
@@ -169,7 +228,7 @@ export function ProjectCard({ project }: { project: HubProject }) {
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-white app-btn-launch"
+              className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold text-white app-btn-launch"
             >
               Launch Application
               <ExternalLink className="w-3.5 h-3.5" />

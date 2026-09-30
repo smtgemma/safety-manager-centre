@@ -35,7 +35,7 @@ export function ProjectsLaunchpad({ initialProjects }: { initialProjects: HubPro
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* ── Grid ── */}
+      {/* ── Grid with items-stretch to guarantee equal card heights ── */}
       {projects.length === 0 ? (
         <div
           className="py-20 rounded-xl text-center max-w-sm mx-auto"
@@ -50,10 +50,11 @@ export function ProjectsLaunchpad({ initialProjects }: { initialProjects: HubPro
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
           {projects.map((p, i) => (
             <div
               key={`${p.id}-${i}`}
+              className="flex flex-col h-full"
               style={{ animation: `fade-up 0.35s ${0.05 + i * 0.04}s ease-out both` }}
             >
               <ProjectCard project={p} />
