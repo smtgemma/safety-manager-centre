@@ -37,7 +37,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+# Long options only: this base image's adduser 3.134 treats -g (gecos/gid/group)
+# and -S (shell/system) as ambiguous and exits non-zero, which fails the build.
+RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 --ingroup nodejs nextjs
 
 # standalone output does not copy public/ or .next/static itself, so they have to
 # be placed alongside the generated server.js by hand.
