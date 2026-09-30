@@ -12,6 +12,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Safety Manager Centre | Application Hub",
   description: "Central launchpad for workplace safety, inspections, and compliance portals.",
+  icons: {
+    icon: "/icon",
+    apple: "/icon",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
