@@ -4,7 +4,8 @@ import { ProjectsLaunchpad } from '@/components/ProjectsLaunchpad';
 import { Footer } from '@/components/Footer';
 import { ShieldCheck } from 'lucide-react';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: 'Safety Manager Centre | Application Hub',
@@ -16,7 +17,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col relative" style={{ background: 'var(--bg-page)' }}>
-
       {/* ── Top green accent stripe ── */}
       <div
         style={{
@@ -26,7 +26,7 @@ export default async function HomePage() {
         }}
       />
 
-      {/* ── Compact brand bar (no nav, no header) ── */}
+      {/* ── Brand Header Bar ── */}
       <div
         className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-8 pb-6 relative z-10"
         style={{ animation: 'fade-up 0.35s ease-out both' }}
@@ -35,7 +35,7 @@ export default async function HomePage() {
         <div className="flex items-center gap-3 mb-5">
           {/* Icon */}
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+            className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
             style={{
               background: 'linear-gradient(135deg, #15803d, #16a34a)',
               boxShadow: '0 0 0 1px rgba(74,222,128,0.25), 0 2px 8px rgba(0,0,0,0.30)',
@@ -51,7 +51,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* Spacer + status pill */}
+          {/* Status indicator */}
           <div className="ml-auto">
             <span
               className="flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full"
@@ -83,7 +83,7 @@ export default async function HomePage() {
 
       {/* ── Grid ── */}
       <div className="flex-1 relative z-10">
-        <ProjectsLaunchpad projects={projects} />
+        <ProjectsLaunchpad initialProjects={projects} />
       </div>
 
       <Footer />

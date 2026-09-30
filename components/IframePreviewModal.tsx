@@ -18,12 +18,16 @@ export function IframePreviewModal({
   const [key, setKey] = useState(0);
 
   useEffect(() => {
-    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const fn = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
     window.addEventListener('keydown', fn);
     return () => window.removeEventListener('keydown', fn);
   }, [onClose]);
 
-  useEffect(() => { if (project) setLoading(true); }, [project]);
+  useEffect(() => {
+    if (project) setLoading(true);
+  }, [project]);
 
   if (!project) return null;
 
@@ -44,7 +48,9 @@ export function IframePreviewModal({
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6"
       style={{ background: 'rgba(8,14,10,0.75)', backdropFilter: 'blur(10px)' }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         className={`flex flex-col h-[92vh] ${widths[viewport]} rounded-xl overflow-hidden transition-all duration-200`}
@@ -64,7 +70,12 @@ export function IframePreviewModal({
         >
           {/* Traffic lights */}
           <div className="flex items-center gap-1.5">
-            <button type="button" onClick={onClose} aria-label="Close" className="w-3 h-3 rounded-full cursor-pointer bg-red-500 hover:bg-red-400 transition-colors" />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="w-3 h-3 rounded-full cursor-pointer bg-red-500 hover:bg-red-400 transition-colors"
+            />
             <span className="w-3 h-3 rounded-full opacity-50" style={{ background: '#fdbc40' }} />
             <span className="w-3 h-3 rounded-full opacity-50" style={{ background: '#34c749' }} />
           </div>
@@ -122,12 +133,19 @@ export function IframePreviewModal({
           {/* Refresh */}
           <button
             type="button"
-            onClick={() => { setLoading(true); setKey((k) => k + 1); }}
+            onClick={() => {
+              setLoading(true);
+              setKey((k) => k + 1);
+            }}
             title="Reload"
             className="p-1.5 rounded-lg transition-colors cursor-pointer"
             style={{ color: 'var(--text-4)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-2)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-4)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = 'var(--text-2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--text-4)';
+            }}
           >
             <RotateCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -150,8 +168,12 @@ export function IframePreviewModal({
             onClick={onClose}
             className="p-1.5 rounded-lg transition-colors cursor-pointer ml-1"
             style={{ color: 'var(--text-4)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#f87171'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-4)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#f87171';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'var(--text-4)';
+            }}
           >
             <X className="w-4 h-4" />
           </button>

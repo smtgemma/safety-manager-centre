@@ -35,7 +35,7 @@ export function ProjectCard({
       {/* ── Thumbnail ── */}
       <div
         className="relative aspect-[16/9] overflow-hidden shrink-0"
-        style={{ background: '#0e1e13' }}
+        style={{ background: '#0e2417' }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -146,8 +146,12 @@ export function ProjectCard({
               border: '1px solid rgba(74,222,128,0.15)',
               color: 'var(--green-bright)',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(74,222,128,0.14)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(74,222,128,0.08)'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(74,222,128,0.14)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(74,222,128,0.08)';
+            }}
           >
             <Eye className="w-3.5 h-3.5" />
             Preview

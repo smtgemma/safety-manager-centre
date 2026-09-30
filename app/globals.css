@@ -1,32 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Surfaces ── */
-  --bg-page: #20442d; /* deep forest green */
-  --bg-surface: #112016; /* slightly lighter */
-  --bg-card: #162b1d; /* card surface */
-  --bg-card-h: #1c3525; /* card hover */
-  --bg-input: #1e5d33;
+  /* ── Rich Forest & Emerald Dark Surfaces ──
+     Green background as preferred, with deep, high-contrast, polished surfaces
+  */
+  --bg-page: #153322;          /* Rich forest green page background */
+  --bg-page-subtle: #193d29;   /* Subtle elevation tint */
+  --bg-surface: #0e2417;       /* Deep surface */
+  --bg-card: #1b3d29;          /* Card container */
+  --bg-card-h: #224c34;        /* Card hover state */
+  --bg-input: #122c1c;         /* Elevated input surface */
+  --bg-glass: rgba(22, 51, 34, 0.85);
 
-  /* ── Text — WHITE on dark green = perfect contrast ── */
-  --text-1: #ffffff; /* headings, primary */
-  --text-2: #d1e8d5; /* body */
-  --text-3: #7aaa86; /* muted / secondary */
-  --text-4: #4d7558; /* very muted */
+  /* ── Typography & Contrast (Crisp on deep green) ── */
+  --text-1: #ffffff;           /* Crisp pure white headings */
+  --text-2: #e3f3e8;           /* Primary text / body */
+  --text-3: #9ec8ab;           /* Secondary / muted */
+  --text-4: #6b9c7b;           /* Dimmed labels */
+  --text-disabled: #466852;    /* Inactive */
 
-  /* ── Brand green ── */
-  --green-bright: #4ade80; /* accent, links */
-  --green-cta: #16a34a; /* CTA button bg */
-  --green-cta-h: #15803d;
+  /* ── Bright Brand & Accent Green ── */
+  --green-bright: #4ade80;     /* Vibrant mint/emerald accent */
+  --green-bright-soft: #22c55e;/* Mid green */
+  --green-cta: #16a34a;        /* CTA button */
+  --green-cta-h: #15803d;      /* CTA hover */
+  --green-subtle: rgba(74, 222, 128, 0.12);
+  --green-subtle-h: rgba(74, 222, 128, 0.20);
 
-  /* ── Borders ── */
-  --border: rgba(255, 255, 255, 0.07);
-  --border-h: rgba(74, 222, 128, 0.3);
+  /* ── Borders & Elevation ── */
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(74, 222, 128, 0.25);
+  --border-h: rgba(74, 222, 128, 0.45);
 
   /* ── Shadows ── */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-card-h:
-    0 6px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(74, 222, 128, 0.18);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --shadow-card-h: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(74, 222, 128, 0.25);
 }
 
 *,
@@ -34,33 +42,39 @@
 *::after {
   box-sizing: border-box;
 }
+
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--bg-page);
+  background-color: var(--bg-page);
   color: var(--text-2);
   font-family:
     var(--font-inter),
     system-ui,
     -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
     sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* subtle top glow */
+/* Ambient subtle emerald glow */
 body::before {
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 300px;
+  height: 400px;
   background: radial-gradient(
-    ellipse 70% 300px at 50% 0%,
-    rgba(74, 222, 128, 0.06) 0%,
+    ellipse 80% 360px at 50% -40px,
+    rgba(74, 222, 128, 0.10) 0%,
     transparent 100%
   );
   pointer-events: none;
@@ -68,22 +82,28 @@ body::before {
 }
 
 ::selection {
-  background: rgba(74, 222, 128, 0.25);
-  color: #fff;
+  background: rgba(74, 222, 128, 0.28);
+  color: #ffffff;
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
+  height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(74, 222, 128, 0.2);
-  border-radius: 99px;
+  background: rgba(74, 222, 128, 0.25);
+  border-radius: 9999px;
 }
 
-/* ── Animations ── */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 222, 128, 0.45);
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -94,8 +114,9 @@ body::before {
     transform: translateY(0);
   }
 }
+
 .fade-up {
-  animation: fade-up 0.35s ease-out both;
+  animation: fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes pulse-dot {
@@ -104,9 +125,10 @@ body::before {
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.35;
   }
 }
+
 .pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

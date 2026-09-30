@@ -1,5 +1,4 @@
 import { google } from 'googleapis';
-import { unstable_cache } from 'next/cache';
 
 export type HubProject = {
   id: string;
@@ -11,72 +10,13 @@ export type HubProject = {
   category: string;
 };
 
-export const REVALIDATE_SECONDS = 300;
-
-export const DEFAULT_SAFETY_PROJECTS: HubProject[] = [
-  {
-    id: 'warehouse-safety',
-    name: 'Warehouse Safety Manager',
-    subdomain: 'warehouse.safetymanagercentre.com',
-    url: 'https://warehouse.safetymanagercentre.com',
-    description: 'Floor safety management, shift hazards tracking, and daily PPE compliance oversight.',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80',
-    category: 'Safety Management',
-  },
-  {
-    id: 'pallet-racks',
-    name: 'Pallet Rack Inspection',
-    subdomain: 'racks.safetymanagercentre.com',
-    url: 'https://racks.safetymanagercentre.com',
-    description: 'EN 15635 compliant racking damage logs, uprights assessment, and beam load verification.',
-    image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=900&auto=format&fit=crop&q=80',
-    category: 'Inspections',
-  },
-  {
-    id: 'incident-reporter',
-    name: 'Incident & Near-Miss Reporter',
-    subdomain: 'incidents.safetymanagercentre.com',
-    url: 'https://incidents.safetymanagercentre.com',
-    description: 'Rapid incident capture, near-miss logging, and OSHA/HSE compliant corrective action workflows.',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&auto=format&fit=crop&q=80',
-    category: 'EHS & Incident Logs',
-  },
-  {
-    id: 'forklift-fleet',
-    name: 'Forklift & Fleet Pre-Shift',
-    subdomain: 'forklift.safetymanagercentre.com',
-    url: 'https://forklift.safetymanagercentre.com',
-    description: 'Daily pre-shift checklist for forklifts, battery diagnostics, and certified driver sign-offs.',
-    image: 'https://images.unsplash.com/photo-1508873696983-2df57046475a?w=900&auto=format&fit=crop&q=80',
-    category: 'Operations',
-  },
-  {
-    id: 'ehs-compliance',
-    name: 'EHS Audits & Regulations',
-    subdomain: 'compliance.safetymanagercentre.com',
-    url: 'https://compliance.safetymanagercentre.com',
-    description: 'ISO 45001 audit checklists, safety certificate renewals, and statutory compliance archive.',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&auto=format&fit=crop&q=80',
-    category: 'Audits',
-  },
-  {
-    id: 'emergency-fire',
-    name: 'Emergency & Fire Readiness',
-    subdomain: 'emergency.safetymanagercentre.com',
-    url: 'https://emergency.safetymanagercentre.com',
-    description: 'Fire extinguisher routine logbook, warden rosters, and emergency exit clearance checks.',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=900&auto=format&fit=crop&q=80',
-    category: 'Emergency',
-  },
-];
-
-async function fetchFromGoogleSheet(): Promise<HubProject[]> {
+export async function fetchFromGoogleSheet(): Promise<HubProject[]> {
   const spreadsheetId = process.env.GOOGLE_SHEET_ID;
   const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   let privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-  if (!spreadsheetId || !clientEmail || !privateKey || spreadsheetId === 'PUT_YOUR_SHEET_ID_HERE') {
-    return DEFAULT_SAFETY_PROJECTS;
+  if (!spreadsheetId || !clientEmail || !privateKey) {
+    return [];
   }
 
   privateKey = privateKey.replace(/^"|"$/g, '').replace(/\\n/g, '\n');
@@ -98,7 +38,7 @@ async function fetchFromGoogleSheet(): Promise<HubProject[]> {
 
     const rows = response.data.values;
     if (!rows || rows.length <= 1) {
-      return DEFAULT_SAFETY_PROJECTS;
+      return [];
     }
 
     const headers = (rows[0] as string[]).map((h) => String(h || '').trim().toLowerCase());
@@ -136,45 +76,26 @@ async function fetchFromGoogleSheet(): Promise<HubProject[]> {
       const url = rawUrl || (cleanSub.startsWith('http') ? cleanSub : `https://${cleanSub}`);
       const image = imageIdx !== -1 ? String(row[imageIdx] ?? '').trim() : '';
       const description = descIdx !== -1 ? String(row[descIdx] ?? '').trim() : '';
-      const category = catIdx !== -1 ? String(row[catIdx] ?? '').trim() || 'Safety Module' : 'Safety Module';
+      const category = catIdx !== -1 ? String(row[catIdx] ?? '').trim() || 'General' : 'General';
 
       sheetProjects.push({
         id,
         name,
         subdomain: cleanSub.replace(/^https?:\/\//, '').replace(/\/$/, ''),
         url,
-        description: description || 'Specialized workplace safety application hosted on a dedicated subdomain.',
-        image: image || DEFAULT_SAFETY_PROJECTS[(i - 1) % DEFAULT_SAFETY_PROJECTS.length].image,
+        description: description || 'Application managed in Google Sheets.',
+        image: image || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80',
         category,
       });
     }
 
-    if (sheetProjects.length === 0) {
-      return DEFAULT_SAFETY_PROJECTS;
-    }
-
-    // If the sheet has fewer than 4 apps, supplement with the remaining default safety projects
-    // so the grid looks full and balanced
-    if (sheetProjects.length < 4) {
-      const existingIds = new Set(sheetProjects.map((p) => p.id.toLowerCase()));
-      const supplements = DEFAULT_SAFETY_PROJECTS.filter((p) => !existingIds.has(p.id.toLowerCase()));
-      return [...sheetProjects, ...supplements];
-    }
-
     return sheetProjects;
   } catch (error) {
-    console.warn('[Google Sheets Integration] Using default safety projects:', error);
-    return DEFAULT_SAFETY_PROJECTS;
+    console.error('[Google Sheets Integration Error]:', error);
+    return [];
   }
 }
 
-export const getHubProjects = unstable_cache(
-  async (): Promise<HubProject[]> => {
-    return fetchFromGoogleSheet();
-  },
-  ['safety-hub-projects-cache-v2'],
-  {
-    revalidate: REVALIDATE_SECONDS,
-    tags: ['hub-projects'],
-  }
-);
+export async function getHubProjects(): Promise<HubProject[]> {
+  return fetchFromGoogleSheet();
+}
