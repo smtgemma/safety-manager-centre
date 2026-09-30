@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect, useTransition } from 'react';
 import { Layers } from 'lucide-react';
-import type { HubProject } from '@/lib/projects-service';
+import type { HubProject } from '@/types/project';
 import { ProjectCard } from './ProjectCard';
-import { IframePreviewModal } from './IframePreviewModal';
 
 export function ProjectsLaunchpad({ initialProjects }: { initialProjects: HubProject[] }) {
   const [projects, setProjects] = useState<HubProject[]>(initialProjects);
-  const [preview, setPreview] = useState<HubProject | null>(null);
   const [, startTransition] = useTransition();
 
   // Background realtime sync
@@ -55,13 +53,11 @@ export function ProjectsLaunchpad({ initialProjects }: { initialProjects: HubPro
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p, i) => (
             <div key={p.id} style={{ animation: `fade-up 0.35s ${0.05 + i * 0.04}s ease-out both` }}>
-              <ProjectCard project={p} onPreview={setPreview} />
+              <ProjectCard project={p} />
             </div>
           ))}
         </div>
       )}
-
-      <IframePreviewModal project={preview} onClose={() => setPreview(null)} />
     </div>
   );
 }
