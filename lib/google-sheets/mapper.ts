@@ -1,6 +1,47 @@
 import { HubProject } from '@/types/project';
 
 /**
+ * Converts any Google Drive URL into high-speed direct embed URLs.
+ * Handles:
+ * - https://drive.google.com/file/d/FILE_ID/view?usp=drive_link
+ * - https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+ * - https://drive.google.com/open?id=FILE_ID
+ * - https://drive.google.com/uc?id=FILE_ID
+ */
+export function convertGoogleDriveUrl(url: string): string {
+  const matchFile = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (matchFile && matchFile[1]) {
+    return `https://lh3.googleusercontent.com/d/${matchFile[1]}`;
+  }
+
+  const matchId = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (matchId && matchId[1]) {
+    return `https://lh3.googleusercontent.com/d/${matchId[1]}`;
+  }
+
+  return url;
+}
+
+export function resolveProjectImage(rawImage: string): string {
+  const trimmed = rawImage.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  // Google Drive link support (including ?usp=drive_link, ?usp=sharing, etc.)
+  if (trimmed.includes('drive.google.com')) {
+    return convertGoogleDriveUrl(trimmed);
+  }
+
+  // Local static asset support (e.g. "warehouse.jpg" or "/images/warehouse.jpg")
+  if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+    return trimmed.startsWith('/') ? trimmed : `/images/${trimmed}`;
+  }
+
+  return trimmed;
+}
+
+/**
  * Normalizes an arbitrary header string by removing special characters,
  * spaces, tabs, and casing differences.
  */
@@ -74,9 +115,8 @@ export function mapRowToProject(
 
   const subdomain = extractDisplaySubdomain(cleanUrl, id);
   const category = getCell('category') || 'Safety Application';
-  const image =
-    getCell('image') ||
-    'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80';
+  const rawImage = getCell('image');
+  const image = resolveProjectImage(rawImage);
   const description = getCell('description') || 'Official workplace application.';
   const displayOrder = parseNumber(getCell('displayorder') || getCell('order'), rowIndex);
   const status = getCell('status') || 'Active';
