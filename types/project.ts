@@ -1,3 +1,5 @@
+export type ProjectStatus = 'Active' | 'Disabled' | 'Coming Soon';
+
 export interface HubProject {
   id: string;
   name: string;
@@ -7,7 +9,7 @@ export interface HubProject {
   image: string;
   description: string;
   displayOrder: number;
-  status: 'Active' | 'Inactive' | string;
+  status: ProjectStatus;
 }
 
 export type SheetRowData = Record<string, unknown>;

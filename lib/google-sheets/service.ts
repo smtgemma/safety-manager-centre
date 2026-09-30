@@ -41,9 +41,8 @@ export async function fetchProjectsFromSheet(): Promise<HubProject[]> {
     for (let i = 1; i < rows.length; i++) {
       const project = mapRowToProject(rows[i] as unknown[], headerMap, i);
       if (project) {
-        // Filter out inactive applications if status is explicitly specified
-        const isInactive = project.status.toLowerCase() === 'inactive';
-        if (!isInactive) {
+        // Exclude Disabled projects from being displayed in the list
+        if (project.status !== 'Disabled') {
           projects.push(project);
         }
       }

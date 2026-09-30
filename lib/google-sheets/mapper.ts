@@ -1,4 +1,4 @@
-import { HubProject } from '@/types/project';
+import { HubProject, ProjectStatus } from '@/types/project';
 
 /**
  * Converts any Google Drive URL into high-speed direct embed URLs.
@@ -49,6 +49,21 @@ export function normalizeHeader(header: unknown): string {
   return String(header ?? '')
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '');
+}
+
+/**
+ * Normalizes status values into the supported ProjectStatus union:
+ * 'Active' | 'Disabled' | 'Coming Soon'
+ */
+export function normalizeStatus(rawStatus: string): ProjectStatus {
+  const clean = rawStatus.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (clean === 'disabled' || clean === 'inactive' || clean === 'disable') {
+    return 'Disabled';
+  }
+  if (clean === 'comingsoon' || clean === 'soon' || clean === 'upcoming') {
+    return 'Coming Soon';
+  }
+  return 'Active';
 }
 
 /**
@@ -119,7 +134,7 @@ export function mapRowToProject(
   const image = resolveProjectImage(rawImage);
   const description = getCell('description') || 'Official workplace application.';
   const displayOrder = parseNumber(getCell('displayorder') || getCell('order'), rowIndex);
-  const status = getCell('status') || 'Active';
+  const status = normalizeStatus(getCell('status'));
 
   return {
     id,

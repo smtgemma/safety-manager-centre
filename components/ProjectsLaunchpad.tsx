@@ -52,7 +52,10 @@ export function ProjectsLaunchpad({ initialProjects }: { initialProjects: HubPro
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p, i) => (
-            <div key={p.id} style={{ animation: `fade-up 0.35s ${0.05 + i * 0.04}s ease-out both` }}>
+            <div
+              key={`${p.id}-${i}`}
+              style={{ animation: `fade-up 0.35s ${0.05 + i * 0.04}s ease-out both` }}
+            >
               <ProjectCard project={p} />
             </div>
           ))}
