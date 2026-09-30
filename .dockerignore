@@ -1,0 +1,39 @@
+# deps & build output
+node_modules
+.next
+out
+build
+*.tsbuildinfo
+
+# secrets — must never reach a build layer. They are injected at runtime.
+.env
+.env.*
+!.env.example
+*.pem
+sheet-*.json
+service-account*.json
+*-service-account*.json
+
+# vcs & tooling
+.git
+.gitignore
+.github
+.vscode
+.idea
+.claude
+
+# docker files themselves
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# docs & misc
+README.md
+CLAUDE.md
+AGENTS.md
+*.md
+*.log
+npm-debug.log*
+yarn-*.log*
+.DS_Store
