@@ -12,26 +12,7 @@ export function ProjectCard({
   onPreview: (p: HubProject) => void;
 }) {
   return (
-    <div
-      className="group flex flex-col rounded-xl overflow-hidden transition-all duration-200"
-      style={{
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow-card)',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.border = '1px solid var(--border-h)';
-        el.style.boxShadow = 'var(--shadow-card-h)';
-        el.style.transform = 'translateY(-3px)';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.border = '1px solid var(--border)';
-        el.style.boxShadow = 'var(--shadow-card)';
-        el.style.transform = 'translateY(0)';
-      }}
-    >
+    <div className="group flex flex-col rounded-xl overflow-hidden app-card">
       {/* ── Thumbnail ── */}
       <div
         className="relative aspect-[16/9] overflow-hidden shrink-0"
@@ -140,18 +121,7 @@ export function ProjectCard({
           <button
             type="button"
             onClick={() => onPreview(project)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 cursor-pointer"
-            style={{
-              background: 'rgba(74,222,128,0.08)',
-              border: '1px solid rgba(74,222,128,0.15)',
-              color: 'var(--green-bright)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(74,222,128,0.14)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(74,222,128,0.08)';
-            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium cursor-pointer app-btn-preview"
           >
             <Eye className="w-3.5 h-3.5" />
             Preview
@@ -161,22 +131,7 @@ export function ProjectCard({
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-xs font-semibold text-white transition-all duration-150"
-            style={{
-              background: 'var(--green-cta)',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.30)',
-              border: '1px solid rgba(74,222,128,0.25)',
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLAnchorElement;
-              el.style.background = 'var(--green-cta-h)';
-              el.style.boxShadow = '0 3px 12px rgba(0,0,0,0.40)';
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLAnchorElement;
-              el.style.background = 'var(--green-cta)';
-              el.style.boxShadow = '0 1px 4px rgba(0,0,0,0.30)';
-            }}
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-xs font-semibold text-white app-btn-launch"
           >
             Launch App
             <ExternalLink className="w-3 h-3" />

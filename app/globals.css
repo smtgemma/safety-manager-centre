@@ -1,9 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* ── Rich Forest & Emerald Dark Surfaces ──
-     Green background as preferred, with deep, high-contrast, polished surfaces
-  */
+  /* ── Rich Forest & Emerald Dark Surfaces ── */
   --bg-page: #153322;          /* Rich forest green page background */
   --bg-page-subtle: #193d29;   /* Subtle elevation tint */
   --bg-surface: #0e2417;       /* Deep surface */
@@ -12,7 +10,7 @@
   --bg-input: #122c1c;         /* Elevated input surface */
   --bg-glass: rgba(22, 51, 34, 0.85);
 
-  /* ── Typography & Contrast (Crisp on deep green) ── */
+  /* ── Typography & Contrast ── */
   --text-1: #ffffff;           /* Crisp pure white headings */
   --text-2: #e3f3e8;           /* Primary text / body */
   --text-3: #9ec8ab;           /* Secondary / muted */
@@ -131,4 +129,54 @@ body::before {
 
 .pulse-dot {
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* UI Helper classes for clean CSS without inline hover fighting SSR */
+.app-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.app-card:hover {
+  border-color: var(--border-h);
+  box-shadow: var(--shadow-card-h);
+  transform: translateY(-3px);
+}
+
+.filter-btn {
+  background: var(--bg-card);
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease;
+}
+.filter-btn:hover {
+  border-color: rgba(74, 222, 128, 0.25);
+  color: var(--text-1);
+}
+.filter-btn-active {
+  background: var(--green-cta);
+  color: #ffffff;
+  border: 1px solid rgba(74, 222, 128, 0.30);
+}
+
+.app-btn-preview {
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  color: var(--green-bright);
+  transition: background-color 0.15s ease;
+}
+.app-btn-preview:hover {
+  background: rgba(74, 222, 128, 0.14);
+}
+
+.app-btn-launch {
+  background: var(--green-cta);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.app-btn-launch:hover {
+  background: var(--green-cta-h);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.40);
 }
